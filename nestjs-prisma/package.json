@@ -1,8 +1,8 @@
 {
-  "name": "hydrogen-prisma",
+  "name": "nestjs-prisma",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Just some hydrogen and nestjs with prisma microservice",
+  "author": "Issa Barake Slebi",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

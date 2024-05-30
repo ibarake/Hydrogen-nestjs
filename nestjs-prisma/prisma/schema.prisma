@@ -14,14 +14,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  gid          String   @unique
-  favorites    Product[]
+  id           String    @id @default(cuid())
+  gid          String    @unique
+  favorites    Product[] @relation("UserFavorites")
 }
 
 model Product {
-  id        String   @id @default(cuid())
-  name      String
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  id        String    @id @default(cuid())
+  gid          String    @unique
+  users User[]   @relation("UserFavorites")
 }
+

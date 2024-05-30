@@ -12,17 +12,17 @@ export class AppController {
   ) {}
 
   @Get('product/:id')
-  async getPostById(@Param('id') id: string): Promise<ProductModel> {
-    return this.productService.product({ id: String(id) });
+  async getProductByGid(@Param('id') id: string): Promise<ProductModel> {
+    return this.productService.product({ gid: String(id) });
   }
 
   @Get('user/:id')
-  async getUserById(@Param('id') id: string): Promise<UserModel> {
-    return this.userService.user({ id: String(id) });
+  async getUserByGid(@Param('id') id: string): Promise<UserModel> {
+    return this.userService.user({ gid: String(id) });
   }
 
   @Post('favorite/:userId/:productId')
-  async favoritePost(
+  async addFavoriteProduct(
     @Param('userId') userId: string,
     @Param('productId') productId: string,
   ): Promise<UserModel> {

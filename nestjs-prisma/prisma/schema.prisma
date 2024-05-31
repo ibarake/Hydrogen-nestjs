@@ -13,15 +13,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Favorite {
   id           String    @id @default(cuid())
-  gid          String    @unique
-  favorites    Product[] @relation("UserFavorites")
-}
-
-model Product {
-  id        String    @id @default(cuid())
-  gid          String    @unique
-  users User[]   @relation("UserFavorites")
+  userId          String    @unique
+  productId String @unique
 }
 

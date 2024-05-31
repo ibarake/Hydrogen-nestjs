@@ -87,6 +87,7 @@ export function HeaderMenu({menu, primaryDomainUrl, viewport}) {
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas" role="navigation">
+      <WishlistToggle />
       <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
@@ -111,6 +112,10 @@ function HeaderMenuMobileToggle() {
 
 function SearchToggle() {
   return <a href="#search-aside">Search</a>;
+}
+
+function WishlistToggle() {
+  return <a href="/wishlist">Wishlist</a>;
 }
 
 /**

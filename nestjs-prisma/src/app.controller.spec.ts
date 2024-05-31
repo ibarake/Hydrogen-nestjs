@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { PrismaService } from './prisma.service';
-import { UserService } from './user.service';
-import { ProductService } from './product.service';
-import { User as UserModel, Product as ProductModel } from '@prisma/client';
-
+import { FavoriteService } from './favorite/favorite.service';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -12,43 +9,36 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [PrismaService, UserService, ProductService],
+      providers: [PrismaService, FavoriteService],
     }).compile();
 
     appController = app.get<AppController>(AppController);
   });
 
-  describe('getUserByGid', () => {
-    it('should return a user', async () => {
-      const user: UserModel = {
-        id: "1",
-        gid: '1'
-      }
-      jest.spyOn(appController, 'getUserByGid').mockImplementation(() => Promise.resolve(user));
-      expect(await appController.getUserByGid('1')).toBe(user);
+  describe('getFavorites', () => {
+    it('should return an array of favorites', async () => {
+      const result = [{ id: '1', userId: '1', productId: '1' }];
+      jest.spyOn(appController, 'getFavorites').mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.getFavorites('1')).toBe(result);
     });
   });
 
-  describe('getProductByGid', () => {
-    it('should return a product', async () => {
-      const product: ProductModel = {
-        id: "1",
-        gid: '1'
-      }
-      jest.spyOn(appController, 'getProductByGid').mockImplementation(() => Promise.resolve(product));
-      expect(await appController.getProductByGid('1')).toBe(product);
-    });
-  })
-
   describe('addFavoriteProduct', () => {
-    it('should return a user', async () => {
-      const user: UserModel = {
-        id: "1",
-        gid: '1'
-      }
-      jest.spyOn(appController, 'addFavoriteProduct').mockImplementation(() => Promise.resolve(user));
-      expect(await appController.addFavoriteProduct('1', '1')).toBe(user);
+    it('should return a favorite', async () => {
+      const result = { id: '1', userId: '1', productId: '1' };
+      jest.spyOn(appController, 'addFavoriteProduct').mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.addFavoriteProduct('1', '1')).toBe(result);
     });
-  })
-  
+  });
+
+  describe('removeFavoriteProduct', () => {
+    it('should return a favorite', async () => {
+      const result = { id: '1', userId: '1', productId: '1' };
+      jest.spyOn(appController, 'removeFavoriteProduct').mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.removeFavoriteProduct('1')).toBe(result);
+    });
+  });
 });

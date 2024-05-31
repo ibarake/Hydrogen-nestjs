@@ -1,0 +1,23 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateFavoriteInput {
+  productId: ID!
+  userId: ID!
+}
+
+type Favorite {
+  id: ID!
+  productId: ID!
+  userId: ID!
+}
+
+type Mutation {
+  createFavorite(createFavoriteInput: CreateFavoriteInput!): Favorite!
+  removeFavorite(id: ID!): Favorite!
+}
+
+type Query {
+  favorite(id: ID!): Favorite!
+}

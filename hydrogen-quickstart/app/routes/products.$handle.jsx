@@ -1,14 +1,15 @@
 import {Suspense} from 'react';
 import {defer, redirect} from '@shopify/remix-oxygen';
-import {Await, Link, useLoaderData} from '@remix-run/react';
+import {Await, Link, useLoaderData, useFetcher} from '@remix-run/react';
 import {
   Image,
   Money,
   VariantSelector,
   getSelectedProductOptions,
-  CartForm,
+  CartForm
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/lib/variants';
+
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -23,6 +24,9 @@ export const meta = ({data}) => {
 export async function loader({params, request, context}) {
   const {handle} = params;
   const {storefront} = context;
+  const cookies = request.headers.get('Cookie')
+
+  const sessionId = cookies.split(';').find((cookie) => cookie.includes('session')).split('=')[1];
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
@@ -63,7 +67,7 @@ export async function loader({params, request, context}) {
     variables: {handle},
   });
 
-  return defer({product, variants});
+  return defer({sessionId, product, variants});
 }
 
 /**
@@ -235,8 +239,8 @@ function ProductForm({product, selectedVariant, variants}) {
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
-      <FavoriteButton>
-        Add to favorite
+      <FavoriteButton variant={selectedVariant}>
+        Favorite
       </FavoriteButton>
     </div>
   );
@@ -310,8 +314,18 @@ function AddToCartButton({analytics, children, disabled, lines, onClick}) {
  * @param {{children: React.ReactNode}}
  * @returns {JSX.Element}
  */
-function FavoriteButton({children}) {
-  return <button>{children}</button>;
+function FavoriteButton({variant, children}) {
+  /** @type {LoaderReturnData} */
+  const {sessionId} = useLoaderData();
+  const wishlist = useFetcher();
+  const productId = variant.id;
+    return (
+      <wishlist.Form method="post" action="/wishlist">
+        <input type="hidden" name="productId" value={productId} />
+        <input type="hidden" name="sessionId" value={sessionId} />
+        <button type="submit">{children}</button>
+      </wishlist.Form>
+    );
 }
 
 const PRODUCT_VARIANT_FRAGMENT = `#graphql

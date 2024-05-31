@@ -19,5 +19,5 @@ type Mutation {
 }
 
 type Query {
-  favorite(id: ID!): Favorite!
+  favorites(userId: ID!): [Favorite!]!
 }

@@ -1,3 +1,53 @@
+const CREATE_FAVORITE_MUTATION = `#graphql
+    mutation createFavoriteMutation($input: CreateFavoriteInput!){
+    createFavorite(createFavoriteInput: $input){
+        userId
+        productId
+    }
+    }
+`;
+
+const CREATE_FAVORITE_INPUT = `#graphql
+    {
+        "input": {
+            "userId": "1",
+            "productId": "1"
+        }
+    }
+`
+
+const GET_FAVORITES_INPUT = `#graphql
+    query findFavoritesQuery($userId: ID!) {
+    favorites(userId: $userId){
+        id
+        userId
+        productId
+    }
+    }
+`
+
+const GET_FAVORITES_VARIABLES = `#graphql
+    {
+    "userId": "1"
+    }
+`
+
+const REMOVE_FAVORITE_MUTATION = `#graphql
+    mutation removeFavoriteMutation($id: ID!){
+    removeFavorite(id: $id){
+        id
+        userId
+        productId
+    }
+    }
+`
+
+const REMOVE_FAVORITE_INPUT = `#graphql
+    {
+    "id": "clwu7k17r00007ef3xjawm8uw"
+    }
+`
+
 /**
  * @param {LoaderFunctionArgs} args
  */

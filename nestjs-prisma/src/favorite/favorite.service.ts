@@ -10,8 +10,8 @@ export class FavoriteService {
     return await this.prisma.favorite.create({ data: { userId: data.userId, productId: data.productId } });
   }
 
-  async findFavorites(id: string) {
-    return await this.prisma.favorite.findMany({ where: { userId: id } });
+  async findFavorites(userId: string) {
+    return await this.prisma.favorite.findMany({ where: { userId: userId } });
   }
 
   async removeFavorite(id: string) {

@@ -15,7 +15,7 @@ datasource db {
 
 model Favorite {
   id           String    @id @default(cuid())
-  userId          String    @unique
-  productId String @unique
+  userId          String
+  productId String
 }
 

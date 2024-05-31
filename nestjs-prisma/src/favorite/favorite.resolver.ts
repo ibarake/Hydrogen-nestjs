@@ -7,9 +7,9 @@ import { CreateFavoriteInput } from './dto/create-favorite.input';
 export class FavoriteResolver {
   constructor(private readonly favoriteService: FavoriteService) {}
 
-  @Query(() => Favorite, { name: 'favorite' })
-  findFavorites(@Args('id', { type: () => ID }) id: string) {
-    return this.favoriteService.findFavorites(id);
+  @Query(() => [Favorite], { name: 'favorites' })
+  findFavorites(@Args('userId', { type: () => ID }) userId: string) {
+    return this.favoriteService.findFavorites(userId);
   }
 
   @Mutation(() => Favorite)

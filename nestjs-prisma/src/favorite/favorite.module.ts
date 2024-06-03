@@ -5,5 +5,6 @@ import { PrismaService } from 'src/prisma.service';
 
 @Module({
   providers: [FavoriteResolver, FavoriteService, PrismaService],
+  exports: [FavoriteService],
 })
 export class FavoriteModule {}

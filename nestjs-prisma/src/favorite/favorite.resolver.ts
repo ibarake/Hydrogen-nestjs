@@ -17,6 +17,7 @@ export class FavoriteResolver {
     return this.favoriteService.createFavorite(createFavoriteInput);
   }
 
+  // TODO: change to recieve variant ID
   @Mutation(() => Favorite)
   removeFavorite(@Args('id', { type: () => ID }) id: string) {
     return this.favoriteService.removeFavorite(id);

@@ -14,6 +14,7 @@ export class FavoriteService {
     return await this.prisma.favorite.findMany({ where: { userId: userId } });
   }
 
+  // TODO: change to recieve variant ID
   async removeFavorite(id: string) {
     return await this.prisma.favorite.delete({ where: { id: id } });
   }

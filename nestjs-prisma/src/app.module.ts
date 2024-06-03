@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { FavoriteModule } from './favorite/favorite.module';
+import { AppController } from './app.controller';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -13,7 +14,7 @@ import { FavoriteModule } from './favorite/favorite.module';
    }),
     FavoriteModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [PrismaService],
 })
 export class AppModule {}

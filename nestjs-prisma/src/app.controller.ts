@@ -26,7 +26,8 @@ export class AppController {
         });
     }
 
-    @Delete('favorite')
+    // TODO: change to recieve variant ID
+    @Delete('favorites/:id')
     async removeFavoriteProduct(
         @Param('id') id: string,
     ): Promise<FavoriteModel> {

@@ -8,6 +8,11 @@ export class AppController {
         private readonly FavoriteService: FavoriteService
     ) {}
 
+    @Get('')
+    async getHello(): Promise<string> {
+        return 'Hello World!';
+    }
+
     @Get('favorites/:id')
     async getFavorites(
         @Param('id') id: string,

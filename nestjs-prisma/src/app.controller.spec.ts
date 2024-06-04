@@ -3,6 +3,9 @@ import { AppController } from './app.controller';
 import { PrismaService } from './prisma.service';
 import { FavoriteService } from './favorite/favorite.service';
 
+/**
+ * Test suite for the AppController class.
+ */
 describe('AppController', () => {
   let appController: AppController;
 
@@ -15,6 +18,9 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
+  /**
+   * Test case for the getFavorites method.
+   */
   describe('getFavorites', () => {
     it('should return an array of favorites', async () => {
       const result = [{ id: '1', userId: '1', productId: '1' }];
@@ -24,6 +30,9 @@ describe('AppController', () => {
     });
   });
 
+  /**
+   * Test case for the addFavoriteProduct method.
+   */
   describe('addFavoriteProduct', () => {
     it('should return a favorite', async () => {
       const result = { id: '1', userId: '1', productId: '1' };
@@ -33,6 +42,9 @@ describe('AppController', () => {
     });
   });
 
+  /**
+   * Test case for the removeFavoriteProduct method.
+   */
   describe('removeFavoriteProduct', () => {
     it('should return a favorite', async () => {
       const result = { id: '1', userId: '1', productId: '1' };

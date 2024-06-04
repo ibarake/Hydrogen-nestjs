@@ -11,6 +11,7 @@ import {
 import {getVariantUrl} from '~/lib/variants';
 
 
+
 /**
  * @type {MetaFunction<typeof loader>}
  */
@@ -24,9 +25,6 @@ export const meta = ({data}) => {
 export async function loader({params, request, context}) {
   const {handle} = params;
   const {storefront} = context;
-  const cookies = request.headers.get('Cookie')
-
-  const sessionId = cookies.split(';').find((cookie) => cookie.includes('session')).split('=')[1];
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
@@ -67,7 +65,15 @@ export async function loader({params, request, context}) {
     variables: {handle},
   });
 
-  return defer({sessionId, product, variants});
+  // get wishlist data to check if product is in wishlist
+  const session = context.session;
+  const uuid = session.get('uuid');
+
+  const wishProducts = await fetch(`http://localhost:8080/favorites/${uuid}`, {method: 'GET'});
+
+  const wishes = await wishProducts.json();
+
+  return defer({product, variants, wishes});
 }
 
 /**
@@ -239,7 +245,7 @@ function ProductForm({product, selectedVariant, variants}) {
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
-      <FavoriteButton variant={selectedVariant}>
+      <FavoriteButton>
         Favorite
       </FavoriteButton>
     </div>
@@ -314,17 +320,47 @@ function AddToCartButton({analytics, children, disabled, lines, onClick}) {
  * @param {{children: React.ReactNode}}
  * @returns {JSX.Element}
  */
-function FavoriteButton({variant, children}) {
+function FavoriteButton({children}) {
   /** @type {LoaderReturnData} */
-  const {sessionId} = useLoaderData();
-  const wishlist = useFetcher();
-  const productId = variant.id;
+  const {product, wishes} = useLoaderData();
+  const submitter = useFetcher();
+  /** Change logic to send id of @type {selectedVariant: ProductFragment['selectedVariant']} */
+  const productId = product.id;
+  console.log(wishes)
+  console.log(productId)
+  const isFavorite = wishes.find((favorite) => favorite.productId === productId.split('/').pop());
     return (
-      <wishlist.Form method="post" action="/wishlist">
-        <input type="hidden" name="productId" value={productId} />
-        <input type="hidden" name="sessionId" value={sessionId} />
-        <button type="submit">{children}</button>
-      </wishlist.Form>
+      <>
+      {
+        /**
+         * Already added button to delete favorite product
+         * @type {boolean} isFavorite
+         * @type {string} productId
+         * @return {JSX.Element}
+         */
+        isFavorite ? (
+          <submitter.Form method="post" action="/wishlist">
+            <input type="hidden" name="productId" value={productId} />
+            <input type="hidden" name="operation" value={"remove"} />
+            <button type="submit">Remove favorite</button>
+          </submitter.Form>
+        ) : 
+        /**
+         * Already added button to delete favorite product
+         * @type {boolean} isFavorite
+         * @type {string} productId
+         * @type {React.ReactNode} children
+         * @return {JSX.Element}
+         */
+        (
+          <submitter.Form method="post" action="/wishlist">
+            <input type="hidden" name="productId" value={productId} />
+            <input type="hidden" name="operation" value={"add"} />
+            <button type="submit">{children}</button>
+          </submitter.Form>
+        )
+      }
+      </> 
     );
 }
 

@@ -2,16 +2,13 @@
 /// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
-// Enhance TypeScript's built-in typings.
-import '@total-typescript/ts-reset';
-
 import type {
-  Storefront,
-  CustomerAccount,
+  WithCache,
   HydrogenCart,
   HydrogenSessionData,
 } from '@shopify/hydrogen';
-import type {AppSession} from '~/lib/session';
+import type {Storefront, CustomerAccount} from '~/lib/type';
+import type {AppSession} from '~/lib/session.server';
 
 declare global {
   /**
@@ -30,6 +27,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
+    PUBLIC_CHECKOUT_DOMAIN: string;
   }
 }
 
@@ -37,13 +35,13 @@ declare module '@shopify/remix-oxygen' {
   /**
    * Declare local additions to the Remix loader context.
    */
-  interface AppLoadContext {
-    env: Env;
-    cart: HydrogenCart;
+  export interface AppLoadContext {
+    waitUntil: ExecutionContext['waitUntil'];
+    session: AppSession;
     storefront: Storefront;
     customerAccount: CustomerAccount;
-    session: AppSession;
-    waitUntil: ExecutionContext['waitUntil'];
+    cart: HydrogenCart;
+    env: Env;
   }
 
   /**
@@ -51,3 +49,6 @@ declare module '@shopify/remix-oxygen' {
    */
   interface SessionData extends HydrogenSessionData {}
 }
+
+// Needed to make this file a module.
+export {};

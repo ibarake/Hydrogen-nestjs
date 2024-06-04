@@ -10,9 +10,6 @@ export const UPDATE_ADDRESS_MUTATION = `#graphql
       addressId: $addressId
       defaultAddress: $defaultAddress
     ) {
-      customerAddress {
-        id
-      }
       userErrors {
         code
         field

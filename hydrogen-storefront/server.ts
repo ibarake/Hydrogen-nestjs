@@ -2,6 +2,10 @@
 // Virtual entry point for the app
 import * as remixBuild from 'virtual:remix/server-build';
 import {
+  createRequestHandler,
+  getStorefrontHeaders,
+} from '@shopify/remix-oxygen';
+import {
   cartGetIdDefault,
   cartSetIdDefault,
   createCartHandler,
@@ -9,13 +13,9 @@ import {
   storefrontRedirect,
   createCustomerAccountClient,
 } from '@shopify/hydrogen';
-import {
-  createRequestHandler,
-  getStorefrontHeaders,
-  type AppLoadContext,
-} from '@shopify/remix-oxygen';
-import {AppSession} from '~/lib/session';
-import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
+
+import {AppSession} from '~/lib/session.server';
+import {getLocaleFromRequest} from '~/lib/utils';
 
 /**
  * Export a fetch handler in module format.
@@ -46,7 +46,7 @@ export default {
       const {storefront} = createStorefrontClient({
         cache,
         waitUntil,
-        i18n: {language: 'EN', country: 'US'},
+        i18n: getLocaleFromRequest(request),
         publicStorefrontToken: env.PUBLIC_STOREFRONT_API_TOKEN,
         privateStorefrontToken: env.PRIVATE_STOREFRONT_API_TOKEN,
         storeDomain: env.PUBLIC_STORE_DOMAIN,
@@ -65,16 +65,11 @@ export default {
         customerAccountUrl: env.PUBLIC_CUSTOMER_ACCOUNT_API_URL,
       });
 
-      /*
-       * Create a cart handler that will be used to
-       * create and update the cart in the session.
-       */
       const cart = createCartHandler({
         storefront,
         customerAccount,
         getCartId: cartGetIdDefault(request.headers),
         setCartId: cartSetIdDefault(),
-        cartQueryFragment: CART_QUERY_FRAGMENT,
       });
 
       /**
@@ -84,13 +79,13 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: (): AppLoadContext => ({
+        getLoadContext: () => ({
           session,
+          waitUntil,
           storefront,
           customerAccount,
           cart,
           env,
-          waitUntil,
         }),
       });
 
